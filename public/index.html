@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Força Futebol - Roupas de Times</title>
+    <style>
+        :root { --verde-militar: #4a5d23; --bege-militar: #c19a6b; --cinza-militar: #5d5d5d; --preto: #1a1a1a; --branco: #ffffff; }
+        html { scroll-behavior: smooth; scroll-padding-top: 80px; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--preto); color: var(--branco); overflow-x: hidden; }
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        .container { width: 90%; max-width: 1200px; margin: 0 auto; }
+        
+        /* Botões */
+        .btn { display: inline-block; background-color: var(--verde-militar); color: var(--branco); padding: 12px 24px; border-radius: 4px; font-weight: bold; text-transform: uppercase; border: none; cursor: pointer; text-align: center; }
+        .btn:hover { background-color: var(--bege-militar); color: var(--preto); }
+        .btn-full { width: 100%; }
+
+        /* Header */
+        header { background-color: var(--verde-militar); height: 70px; display: flex; align-items: center; border-bottom: 3px solid var(--bege-militar); position: sticky; top: 0; z-index: 1000; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .header-container { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+        .logo { font-size: 1.5rem; font-weight: bold; text-transform: uppercase; display: flex; align-items: center; gap: 10px; }
+        .nav-menu { display: flex; gap: 20px; align-items: center; list-style: none; }
+        .nav-link { font-weight: 500; text-transform: uppercase; font-size: 0.9rem; color: white; }
+        
+        /* Hero */
+        .hero { background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://png.pngtree.com/thumb_back/fw800/background/20220428/pngtree-soccer-or-football-cup-image_1110527.jpg'); background-size: cover; background-position: center; min-height: 60vh; display: flex; align-items: center; justify-content: center; text-align: center; padding: 20px; }
+        .hero h2 { font-size: clamp(2rem, 5vw, 3.5rem); margin-bottom: 15px; }
+
+        /* Produtos */
+        .products { padding: 50px 0; }
+        .section-title { text-align: center; margin-bottom: 40px; text-transform: uppercase; position: relative; }
+        .product-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 20px; }
+        .product-card { background: var(--cinza-militar); border: 1px solid var(--cinza-militar); border-radius: 8px; overflow: hidden; display: flex; flex-direction: column; }
+        .product-image { height: 180px; background-color: #333; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #555; background-size: cover; background-position: center; }
+        .product-info { padding: 15px; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+        .price { font-size: 1.2rem; font-weight: bold; margin-bottom: 15px; }
+
+        /* Footer */
+        footer { background: #111; padding: 40px 0; margin-top: auto; border-top: 3px solid var(--bege-militar); }
+        .footer-content { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 30px; }
+
+        /* Mobile */
+        .hamburger { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+        .bar { width: 25px; height: 3px; background-color: white; }
+        
+        @media (max-width: 768px) {
+            .hamburger { display: flex; }
+            .nav-menu { position: fixed; right: -100%; top: 70px; height: calc(100vh - 70px); width: 100%; background-color: var(--preto); flex-direction: column; align-items: center; padding-top: 40px; transition: 0.3s; }
+            .nav-menu.active { right: 0; }
+            .product-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+            .product-image { height: 140px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="container header-container">
+            <a href="#inicio" class="logo"><span>FF</span><h1>Força Fut</h1></a>
+            <nav>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#inicio" class="nav-link">Início</a></li>
+                    <li><a href="#destaques" class="nav-link">Camisas</a></li>
+                    <li><a href="#contato" class="nav-link">Contato</a></li>
+                </ul>
+            </nav>
+            <div class="hamburger" id="hamburger"><span class="bar"></span><span class="bar"></span><span class="bar"></span></div>
+        </div>
+    </header>
+
+    <section class="hero" id="inicio">
+        <div>
+            <h2>A Artilharia dos Mantos</h2>
+            <p>Vista a paixão pelo seu time com qualidade.</p>
+            <a href="#destaques" class="btn">Ver Coleção</a>
+        </div>
+    </section>
+
+    <section class="products" id="destaques">
+        <div class="container">
+            <h2 class="section-title">Destaques</h2>
+            <div class="product-grid" id="vitrine-produtos">
+                </div>
+        </div>
+    </section>
+
+    <footer id="contato">
+        <div class="container footer-content">
+            <div><h4>Institucional</h4><p>Sobre Nós</p></div>
+            <div><h4>Ajuda</h4><a href="https://wa.me/558498228590" target="_blank" style="color:#ccc">Fale Conosco</a></div>
+        </div>
+    </footer>
+
+    <script>
+        const vitrine = document.getElementById('vitrine-produtos');
+        const telefoneZap = "558498228590";
+
+        // --- CONEXÃO COM O SERVIDOR ---
+        async function carregarProdutos() {
+            vitrine.innerHTML = "<p style='text-align:center; color:white; width:100%'>Carregando coleção...</p>";
+            
+            try {
+                const resposta = await fetch('/api/produtos'); // Chama o arquivo server.js
+                const produtos = await resposta.json();
+
+                let htmlFinal = "";
+                produtos.forEach(produto => {
+                    let imagemHtml = produto.imagem 
+                        ? `<div class="product-image" style="background-image: url('${produto.imagem}');"></div>`
+                        : `<div class="product-image">${produto.time || 'FF'}</div>`;
+
+                    htmlFinal += `
+                    <div class="product-card">
+                        ${imagemHtml}
+                        <div class="product-info">
+                            <h3>${produto.nome}</h3>
+                            <p>${produto.time}</p>
+                            <div class="price">R$ ${produto.preco}</div>
+                            <a href="https://wa.me/${telefoneZap}?text=Olá, tenho interesse na ${produto.nome}" 
+                               target="_blank" class="btn btn-full">Comprar</a>
+                        </div>
+                    </div>`;
+                });
+
+                vitrine.innerHTML = htmlFinal || "<p style='text-align:center'>Nenhum produto encontrado.</p>";
+            } catch (erro) {
+                console.error(erro);
+                vitrine.innerHTML = "<p style='text-align:center'>Erro ao carregar produtos. Verifique a conexão.</p>";
+            }
+        }
+
+        carregarProdutos();
+
+        // Menu Mobile
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+        hamburger.addEventListener('click', () => navMenu.classList.toggle('active'));
+        document.querySelectorAll('.nav-link').forEach(l => l.addEventListener('click', () => navMenu.classList.remove('active')));
+    </script>
+</body>
+</html>

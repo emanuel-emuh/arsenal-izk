@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Força Futebol</title>
+    <style>
+        body { background: #1a1a1a; color: white; font-family: sans-serif; display: flex; justify-content: center; padding: 50px; }
+        .container { width: 100%; max-width: 400px; background: #333; padding: 30px; border-radius: 10px; }
+        input { width: 100%; padding: 10px; margin: 10px 0; border-radius: 5px; border: none; }
+        button { width: 100%; padding: 10px; background: #4a5d23; color: white; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-top: 10px;}
+        button:hover { background: #c19a6b; color: black; }
+        .hidden { display: none; }
+        label { font-size: 0.9rem; color: #c19a6b; }
+        h2 { text-align: center; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="login-screen">
+            <h2>Área Restrita</h2>
+            <p style="font-size:0.8rem; color:#ccc; text-align:center; margin-bottom:10px">Digite a senha configurada no Render</p>
+            <input type="password" id="senha-input" placeholder="Senha de Admin">
+            <button onclick="entrar()">Entrar</button>
+        </div>
+
+        <div id="admin-panel" class="hidden">
+            <h2>Novo Produto</h2>
+            <label>Nome</label>
+            <input type="text" id="prod-nome" placeholder="Ex: Camisa Flamengo">
+            <label>Time</label>
+            <input type="text" id="prod-time" placeholder="Ex: 2023 - Jogo 1">
+            <label>Preço</label>
+            <input type="text" id="prod-preco" placeholder="Ex: 249,90">
+            <label>Imagem URL</label>
+            <input type="text" id="prod-img" placeholder="http://...">
+
+            <button onclick="salvarProduto()">Adicionar ao Site</button>
+            <button onclick="sair()" style="background: #555; margin-top: 20px;">Sair</button>
+        </div>
+    </div>
+
+    <script>
+        function entrar() {
+            const senha = document.getElementById('senha-input').value;
+            if(senha) {
+                localStorage.setItem('adminKey', senha);
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('admin-panel').classList.remove('hidden');
+            }
+        }
+
+        // Verifica se já tem senha salva
+        if(localStorage.getItem('adminKey')) {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('admin-panel').classList.remove('hidden');
+        }
+
+        async function salvarProduto() {
+            const nome = document.getElementById('prod-nome').value;
+            const time = document.getElementById('prod-time').value;
+            const preco = document.getElementById('prod-preco').value;
+            const imagem = document.getElementById('prod-img').value;
+            const senha = localStorage.getItem('adminKey');
+
+            try {
+                const resposta = await fetch('/api/produtos', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'admin-senha': senha // Envia a senha para o servidor conferir
+                    },
+                    body: JSON.stringify({ nome, time, preco, imagem })
+                });
+
+                if (resposta.ok) {
+                    alert("Produto Adicionado com Sucesso!");
+                    document.getElementById('prod-nome').value = "";
+                    document.getElementById('prod-time').value = "";
+                    document.getElementById('prod-preco').value = "";
+                } else {
+                    alert("Erro: Senha incorreta ou falha no servidor.");
+                }
+            } catch (erro) {
+                alert("Erro de conexão.");
+            }
+        }
+
+        function sair() {
+            localStorage.removeItem('adminKey');
+            location.reload();
+        }
+    </script>
+</body>
+</html>
